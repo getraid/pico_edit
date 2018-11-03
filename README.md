@@ -1,3 +1,12 @@
+# PROJECT UNMAINTAINED
+
+> *This project is not maintained anymore*
+>
+> *If you like it or continue to use it fork it please.*
+
+---
+---
+
 Pico edit - An admin interface for Pico CMS
 ===========================================
 
@@ -35,7 +44,7 @@ Options (Pico "config/config.php"):
 	$config['pico_edit_options'] = false;			// Disallow options editing
 	$config['pico_edit_default_author'] = 'Me';		// Default author for new pages
 
-![Screenshot](https://github.com/blocknotes/pico_edit/blob/master/screenshot.png)
+![Screenshot](screenshot.png)
 
 Editing Pico options
 --------------------
@@ -59,3 +68,7 @@ History
 * Pico Edit is a fork + modifications of [Peeked](https://github.com/coofercat/peeked). It contains minor improvements and some new feature like ability to edit 404 page and Pico options.
 
 * Peeked is a fork + modifications of the [Pico Editor](https://github.com/gilbitron/Pico-Editor-Plugin), written by [Gilbert Pellegrom](https://github.com/gilbitron). It contains a few bug fixes and some functional changes, most particularly the addition of some Git capabilities.
+
+* * *
+
+My website: <https://blocknot.es/>
