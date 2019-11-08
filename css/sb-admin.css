@@ -12048,3 +12048,21 @@ body.sidebar-toggled footer.sticky-footer {
     margin: 0 1em;
   }
 }
+
+
+html,
+body {
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+}
+
+body>* {
+  flex-shrink: 0;
+}
+
+.editSection {
+
+  flex-grow: 1;
+}
