@@ -14,7 +14,9 @@
       Original dashboard theme from: https://github.com/BlackrockDigital/startbootstrap-sb-admin
     -->
 
+    <!-- TODO: 'Replace CDN Link to local file' -->
     <!-- Styles -->
+
     <link
       rel="stylesheet"
       href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css"
@@ -32,8 +34,13 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"
     />
     <!-- Scripts -->
-    <!-- TODO: 'Replace CDN Link to local file' -->
+
     <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.js"
+      integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+      crossorigin="anonymous"
+    ></script>
 
     <!-- Custom fonts for this template-->
     <link
@@ -307,11 +314,16 @@
 
           <div id="editSection"></div>
           <script>
-            var editor = new tui.Editor({
-              el: document.querySelector("#editSection"),
-              previewStyle: "vertical",
-              height: "85vh",
-              initialEditType: "markdown"
+            $.post("{{ pico_edit_url }}/open", { file: "index" }, function(
+              data
+            ) {
+              var editor = new tui.Editor({
+                el: document.querySelector("#editSection"),
+                previewStyle: "vertical",
+                height: "85vh",
+                initialEditType: "markdown",
+                initialValue: data
+              });
             });
           </script>
         </div>
