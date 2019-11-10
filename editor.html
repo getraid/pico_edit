@@ -164,9 +164,9 @@
       </ul>
     </nav>
 
-    <div id="wrapper">
+    <div id="wrapper" id="nav">
       <!-- Sidebar -->
-      <ul class="sidebar navbar-nav">
+      <ul class="sidebar navbar-nav nav">
         {% if config.pico_edit_404 %}
         <li class="nav-item active">
           <a class="nav-link post page-404" data-url="/404" href="#">
@@ -174,49 +174,73 @@
             <span>404</span>
           </a>
         </li>
-        {% endif %}
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            id="pagesDropdown"
-            role="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            <i class="fas fa-fw fa-folder"></i>
-            <span>Pages</span>
+        {% endif %} {% for page in pages %}
+
+        <li class="nav-item post ">
+          <a class="nav-link post" data-url="{{ page.id }}" href="#">
+            <i class="fas fa-fw fa-sticky-note"></i>
+            <span>{{ page.id }}</span>
           </a>
-          <div class="dropdown-menu" aria-labelledby="pagesDropdown">
-            <h6 class="dropdown-header">Login Screens:</h6>
+        </li>
+
+        <!-- <li class="nav-item dropdown">
+            <a href="#" data-url="{{ page.id }}" class="post"
+              ><span class="icon-file-text2 marg-r5" aria-hidden="true"></span>/{{
+                page.id
+              }}</a
+            > -->
+        <!-- <a href="{{ page.url }}" target="_blank" class="view" title="View"
+              ><span class="icon icon-eye" aria-hidden="true"></span
+            ></a> -->
+        <!-- <a href="#" data-url="{{ page.id }}" class="delete" title="Delete"
+              ><span class="icon icon-bin" aria-hidden="true"></span
+            ></a> -->
+        <!-- </li> -->
+
+        <!-- 
+          <li class="nav-item dropdown">
             <a
-              class="dropdown-item logout btn icon-switch"
-              href="{{ pico_edit_url }}/logout"
-              >Login</a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="pagesDropdown"
+              role="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
             >
-            <a class="dropdown-item" href="register.html">Register</a>
-            <a class="dropdown-item" href="forgot-password.html"
-              >Forgot Password</a
+              <i class="fas fa-fw fa-folder"></i>
+              <span>Pages</span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="pagesDropdown">
+              <h6 class="dropdown-header">Login Screens:</h6>
+              <a
+                class="dropdown-item logout btn icon-switch"
+                href="{{ pico_edit_url }}/logout"
+                >Login</a
+              >
+              <a class="dropdown-item" href="register.html">Register</a>
+              <a class="dropdown-item" href="forgot-password.html"
+                >Forgot Password</a
+              >
+              <div class="dropdown-divider"></div>
+              <h6 class="dropdown-header">Other Pages:</h6>
+              <a class="dropdown-item" href="404.html">404 Page</a>
+              <a class="dropdown-item" href="blank.html">Blank Page</a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="charts.html">
+              <i class="fas fa-fw fa-chart-area"></i>
+              <span>Charts</span></a
             >
-            <div class="dropdown-divider"></div>
-            <h6 class="dropdown-header">Other Pages:</h6>
-            <a class="dropdown-item" href="404.html">404 Page</a>
-            <a class="dropdown-item" href="blank.html">Blank Page</a>
-          </div>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="charts.html">
-            <i class="fas fa-fw fa-chart-area"></i>
-            <span>Charts</span></a
-          >
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="tables.html">
-            <i class="fas fa-fw fa-table"></i>
-            <span>Tables</span></a
-          >
-        </li>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="tables.html">
+              <i class="fas fa-fw fa-table"></i>
+              <span>Tables</span></a
+            >
+          </li> -->
+        {% endfor %}
       </ul>
 
       <div id="content-wrapper">
@@ -323,6 +347,25 @@
                 height: "85vh",
                 initialEditType: "markdown",
                 initialValue: data
+              });
+            });
+
+            // TODO: 'Prevent unsafed changes'
+            $(".nav,.nav0").on("click", ".post", function(e) {
+              $(".nav .post,.nav0 .post").removeClass("open");
+              $(this).addClass("open");
+
+              var fileUrl = $(this).attr("data-url");
+              $.post("{{ pico_edit_url }}/open", { file: fileUrl }, function(
+                data
+              ) {
+                var editor = new tui.Editor({
+                  el: document.querySelector("#editSection"),
+                  previewStyle: "vertical",
+                  height: "85vh",
+                  initialEditType: "markdown",
+                  initialValue: data
+                });
               });
             });
           </script>
