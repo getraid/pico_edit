@@ -241,12 +241,12 @@ final class Pico_Edit extends AbstractPicoPlugin
       if ($file && file_exists($file)) {
 
         $tmpAllContents = file_get_contents($file);
-        $tmpAllContentsSplit = preg_split('/---/', $tmpAllContents);
-        $tmpCatAC = "";
-        for ($i = 2; $i <= count($tmpAllContentsSplit) - 1; $i++) {
-          $tmpCatAC = $tmpCatAC . $tmpAllContentsSplit[$i];
-        }
-        die($tmpCatAC);
+        // $tmpAllContentsSplit = preg_split('/---/', $tmpAllContents);
+        // $tmpCatAC = "";
+        // for ($i = 2; $i <= count($tmpAllContentsSplit) - 1; $i++) {
+        //   $tmpCatAC = $tmpCatAC . $tmpAllContentsSplit[$i];
+        // }
+        die(file_get_contents($file));
       } else die('Error: Invalid file');
     } else if ($this->getConfig('pico_edit_options')) {
       $conf = $this->getConfigDir() . '/options.conf';
