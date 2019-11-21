@@ -338,9 +338,16 @@
 
           <div id="editSection"></div>
           <script>
-            $.post("{{ pico_edit_url }}/open", { file: "index" }, function(
-              data
-            ) {
+            tmpCount = 0;
+            function LoadEditor(data, file) {
+              // retry to fetch 3 times
+              if (data == "Error: Invalid file" && tmpCount <= 3) {
+                tmpCount++;
+                data = window["fa"](arguments);
+              } else {
+                tmpCount = 0;
+              }
+
               var editor = new tui.Editor({
                 el: document.querySelector("#editSection"),
                 previewStyle: "vertical",
@@ -348,10 +355,16 @@
                 initialEditType: "markdown",
                 initialValue: data
               });
+            }
+
+            $.post("{{ pico_edit_url }}/open", { file: "index" }, function(
+              data
+            ) {
+              LoadEditor(data);
             });
 
             // TODO: 'Prevent unsafed changes'
-            $(".nav,.nav0").on("click", ".post", function(e) {
+            var fa = $(".nav,.nav0").on("click", ".post", function(e) {
               $(".nav .post,.nav0 .post").removeClass("open");
               $(this).addClass("open");
 
@@ -359,13 +372,7 @@
               $.post("{{ pico_edit_url }}/open", { file: fileUrl }, function(
                 data
               ) {
-                var editor = new tui.Editor({
-                  el: document.querySelector("#editSection"),
-                  previewStyle: "vertical",
-                  height: "85vh",
-                  initialEditType: "markdown",
-                  initialValue: data
-                });
+                LoadEditor(data, fileUrl);
               });
             });
           </script>
