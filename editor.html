@@ -19,28 +19,36 @@
 
     <link
       rel="stylesheet"
-      href="https://uicdn.toast.com/tui-editor/latest/tui-editor.css"
+      href="{{
+        base_url
+      }}/plugins/pico_edit/libs/tuiEditor/tui-editor.css"
     />
     <link
       rel="stylesheet"
-      href="https://uicdn.toast.com/tui-editor/latest/tui-editor-contents.css"
+      href="{{
+        base_url
+      }}/plugins/pico_edit/libs/tuiEditor/tui-editor-contents.css"
     />
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.css"
+      href="{{
+        base_url
+      }}/plugins/pico_edit/libs/tuiEditor/codemirror.css"
     />
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"
+      href="{{
+        base_url
+      }}/plugins/pico_edit/libs/tuiEditor/github.min.css"
     />
     <!-- Scripts -->
 
-    <script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
-    <script
-      src="https://code.jquery.com/jquery-3.4.1.js"
-      integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-      crossorigin="anonymous"
-    ></script>
+    <script src="{{
+      base_url
+    }}/plugins/pico_edit/libs/tuiEditor/tui-editor-Editor-full.js"></script>
+    <script src="{{
+        base_url
+      }}/plugins/pico_edit/libs/tuiEditor/jquery-3.4.1.js"></script>
 
     <!-- Custom fonts for this template-->
     <link
@@ -97,8 +105,9 @@
             aria-haspopup="true"
             aria-expanded="false"
           >
-            <i class="fas fa-bell fa-fw"></i>
-            <span class="badge badge-danger">9+</span>
+            <!-- TODO: 'Change the saved state based on onChange event' -->
+            <span class="badge badge-danger invisible">unsaved</span>
+            <i id="saveIcon" class="fas fa-save fa-fw"></i>
           </a>
           <div
             class="dropdown-menu dropdown-menu-right"
@@ -339,14 +348,14 @@
           <div id="editSection"></div>
           <script>
             tmpCount = 0;
-            function LoadEditor(data, file) {
-              // retry to fetch 3 times
-              if (data == "Error: Invalid file" && tmpCount <= 3) {
-                tmpCount++;
-                data = window["fa"](arguments);
-              } else {
-                tmpCount = 0;
-              }
+            function LoadEditor(data) {
+              // // retry to fetch 3 times
+              // if (data == "Error: Invalid file" && tmpCount <= 3) {
+              //   tmpCount++;
+              //   data = window[""]();
+              // } else {
+              //   tmpCount = 0;
+              // }
 
               var editor = new tui.Editor({
                 el: document.querySelector("#editSection"),
@@ -364,15 +373,17 @@
             });
 
             // TODO: 'Prevent unsafed changes'
-            var fa = $(".nav,.nav0").on("click", ".post", function(e) {
+
+            $(".nav,.nav0").on("click", ".post", function(e) {
               $(".nav .post,.nav0 .post").removeClass("open");
               $(this).addClass("open");
 
               var fileUrl = $(this).attr("data-url");
+
               $.post("{{ pico_edit_url }}/open", { file: fileUrl }, function(
                 data
               ) {
-                LoadEditor(data, fileUrl);
+                LoadEditor(data);
               });
             });
           </script>

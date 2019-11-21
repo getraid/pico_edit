@@ -21,6 +21,10 @@ final class Pico_Edit extends AbstractPicoPlugin
   private $password = '';
   private $url = 'pico_edit';
 
+  //getraid fork settings
+  private $splitMetadata = true;
+  private $generateMetadataMessageInMd = true;
+
   public function onPageRendering(Twig_Environment &$twig, array &$twig_vars, &$templateName)
   {
     $twig_vars['pico_edit_url'] = $this->getPageUrl($this->url);
@@ -234,20 +238,39 @@ final class Pico_Edit extends AbstractPicoPlugin
 
   private function do_open()
   {
-    if (!isset($_SESSION['backend_logged_in']) || !$_SESSION['backend_logged_in']) die(json_encode(array('error' => 'Error: Unathorized')));
+
+    if (!isset($_SESSION['backend_logged_in']) || !$_SESSION['backend_logged_in']) die(json_encode(array('error' => 'Error: Unauthorized')));
     $file_url = isset($_POST['file']) && $_POST['file'] ? $_POST['file'] : '';
     if ($file_url != 'conf') {
       $file = $this->get_real_filename($file_url);
       if ($file && file_exists($file)) {
 
         $tmpAllContents = file_get_contents($file);
-        $tmpAllContentsSplit = preg_split('/---/', $tmpAllContents);
-        $tmpCatAC = "";
-        for ($i = 2; $i <= count($tmpAllContentsSplit) - 1; $i++) {
-          $tmpCatAC = $tmpCatAC . $tmpAllContentsSplit[$i];
+
+        if ($this->splitMetadata) {
+          $tmpAllContentsSplit = preg_split('/---/', $tmpAllContents);
+
+          $tmpCatAC = "";
+          for ($i = 2; $i <= count($tmpAllContentsSplit) - 1; $i++) {
+            $tmpCatAC = $tmpCatAC . $tmpAllContentsSplit[$i];
+          }
+
+          $re = "/^\\s+/m";
+          $tmpCatAC = preg_replace($re, '', $tmpCatAC);
+          if (empty($tmpCatAC)) {
+
+            if ($this->generateMetadataMessageInMd) {
+              $tmpCatAC = "(This file only contains meta-data. Delete these text and add your markup)\n(If you don't want this text to be generated, toggle \$generateMetadataMessageInMd the pico_edit.php)";
+            } else {
+              $tmpCatAC = " ";
+            }
+          }
+        } else {
+          $tmpCatAC = $tmpAllContents;
         }
+
         die($tmpCatAC);
-      } else die('Error: Invalid file');
+      }
     } else if ($this->getConfig('pico_edit_options')) {
       $conf = $this->getConfigDir() . '/options.conf';
       if (file_exists($conf)) die(file_get_contents($conf));
@@ -257,7 +280,7 @@ final class Pico_Edit extends AbstractPicoPlugin
 
   private function do_save()
   {
-    if (!isset($_SESSION['backend_logged_in']) || !$_SESSION['backend_logged_in']) die(json_encode(array('error' => 'Error: Unathorized')));
+    if (!isset($_SESSION['backend_logged_in']) || !$_SESSION['backend_logged_in']) die(json_encode(array('error' => 'Error: Unauthorized')));
     $file_url = isset($_POST['file']) && $_POST['file'] ? $_POST['file'] : '';
     if ($file_url != 'conf') {
       $file = $this->get_real_filename($file_url);

@@ -12066,3 +12066,8 @@ body>* {
 
   flex-grow: 1;
 }
+
+#saveIcon
+{
+  margin-right: 2em;
+}
